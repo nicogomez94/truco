@@ -21,6 +21,7 @@ const modalClose = document.querySelector('#modalClose');
 const confirmJoin = document.querySelector('#confirmJoin');
 const quickJoin = document.querySelector('#quickJoin');
 const soundButton = document.querySelector('#soundButton');
+const loginSound = document.querySelector('#loginSound');
 const toast = document.querySelector('#toast');
 const gameTitle = document.querySelector('#gameTitle');
 const gameEntry = document.querySelector('#gameEntry');
@@ -56,6 +57,7 @@ function showLobby(name) {
   lobbyScreen.classList.add('is-active');
   document.body.classList.add('lobby-active');
   window.scrollTo({ top: 0, behavior: 'auto' });
+  window.trucoAudio?.play('open');
   requestAnimationFrame(() => revealVisibleElements(lobbyScreen));
 }
 
@@ -179,6 +181,7 @@ function enterGame(table) {
   document.body.classList.add('game-active');
   document.body.style.overflow = 'hidden';
   resetGameInterface();
+  window.trucoAudio?.play('deal');
 }
 
 function resetGameInterface() {
@@ -247,12 +250,6 @@ chatButton.addEventListener('click', () => {
 
 gameSettings.addEventListener('click', () => showToast('Ajustes de mesa: interfaz de muestra.'));
 
-gameSound.addEventListener('click', () => {
-  const muted = gameSound.classList.toggle('is-muted');
-  gameSound.innerHTML = `<i class="fa-solid fa-volume-${muted ? 'xmark' : 'high'}"></i>`;
-  showToast(muted ? 'Sonido de la mesa desactivado' : 'Sonido de la mesa activado');
-});
-
 quickJoin.addEventListener('click', () => {
   const available = tableCards.filter(card => card.dataset.status === 'available' && Number(card.dataset.entry) <= balance && !card.querySelector('.join-button').disabled);
   if (!available.length) {
@@ -271,12 +268,27 @@ function showToast(message) {
   toastTimeout = setTimeout(() => toast.classList.remove('is-visible'), 3000);
 }
 
-soundButton.addEventListener('click', () => {
-  const muted = soundButton.classList.toggle('is-muted');
-  soundButton.innerHTML = `<i class="fa-solid fa-volume-${muted ? 'xmark' : 'high'}"></i>`;
-  soundButton.setAttribute('aria-label', muted ? 'Activar sonidos' : 'Desactivar sonidos');
-  showToast(muted ? 'Sonidos desactivados' : 'Sonidos activados');
-});
+function updateAudioControls(muted) {
+  [loginSound, soundButton, gameSound].forEach(button => {
+    button.classList.toggle('is-muted', muted);
+    button.innerHTML = `<i class="fa-solid fa-volume-${muted ? 'xmark' : 'high'}"></i>`;
+    button.setAttribute('aria-label', muted ? 'Activar sonidos y música' : 'Desactivar sonidos y música');
+    button.setAttribute('aria-pressed', String(muted));
+  });
+}
+
+function toggleAudio() {
+  if (!window.trucoAudio) return;
+  if (!window.trucoAudio.isMuted()) window.trucoAudio.play('click');
+  const muted = window.trucoAudio.toggleMuted();
+  showToast(muted ? 'Música y efectos desactivados' : 'Música y efectos activados');
+}
+
+soundButton.addEventListener('click', toggleAudio);
+gameSound.addEventListener('click', toggleAudio);
+loginSound.addEventListener('click', toggleAudio);
+document.addEventListener('truco:audiochange', event => updateAudioControls(event.detail.muted));
+updateAudioControls(window.trucoAudio?.isMuted() ?? false);
 
 function syncFantasyProfile() {
   const name = playerDisplay.textContent;

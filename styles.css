@@ -80,6 +80,24 @@ button { color: inherit; }
 .login-screen::after { right: -38vw; bottom: -26vw; animation-direction: reverse; }
 
 .login-sky { position: absolute; inset: 0; pointer-events: none; }
+.login-sound-button {
+  position: absolute;
+  z-index: 8;
+  top: 18px;
+  left: 18px;
+  width: 43px;
+  height: 43px;
+  border: 1px solid rgba(236,185,79,.32);
+  border-radius: 50%;
+  color: var(--gold-light);
+  background: rgba(21,6,10,.62);
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: transform .25s, color .25s, border-color .25s;
+}
+.login-sound-button:hover { color: var(--gold); border-color: var(--gold); transform: rotate(-7deg) scale(1.06); }
+.login-sound-button:active { transform: scale(.9); }
 .star { position: absolute; color: var(--gold); opacity: .7; animation: twinkle 2.8s ease-in-out infinite; }
 .star-a { top: 13%; left: 13%; font-size: 2rem; }
 .star-b { top: 19%; right: 14%; font-size: 1rem; animation-delay: .8s; }
@@ -408,6 +426,7 @@ body:has(.login-screen.is-active) .whatsapp-button { bottom: 18px; }
 
 @media (min-width: 480px) {
   .login-screen { padding: 30px; }
+  .login-sound-button { top: 28px; left: 28px; }
   .flying-card { width: 84px; height: 132px; }
   .card-one { left: 4%; }
   .card-two { right: 4%; }
