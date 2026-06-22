@@ -358,6 +358,8 @@ button { color: inherit; }
 .seat-left { left: -24px; top: 33px; }
 .seat-right { right: -24px; top: 33px; }
 .seat:not(.is-filled) { border-style: dashed; color: var(--cream); background: var(--night-soft); }
+.table-card[data-mode="1 vs 1"] .seat-left { display: none; }
+.table-card[data-mode="1 vs 1"] .seat-right { right: auto; top: auto; bottom: -30px; left: calc(50% - 18px); }
 
 .table-info { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 16px 1px 12px; }
 .table-info h3 { margin: 0; font: 1.16rem var(--font-display); }
@@ -591,9 +593,11 @@ body:has(.login-screen.is-active) .whatsapp-button { bottom: 18px; }
 .opponent-profile strong { display: block; font-size: .58rem; }
 .opponent-profile small { display: flex; align-items: center; gap: 4px; color: var(--cream-dim); font-size: .47rem; }
 .opponent-profile small i { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); animation: pulse 1.5s infinite; }
-.side-player { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--cream-dim); font-size: .48rem; }
+.side-player { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--cream-dim); font-size: .48rem; transition: opacity .25s, transform .25s; }
 .side-player span { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid rgba(236,185,79,.35); border-radius: 50%; color: var(--gold); background: #35101a; font-size: .55rem; font-weight: 900; transition: transform .25s; }
 .side-player:hover span { transform: scale(1.12) rotate(4deg); }
+.game-screen.is-solo .side-player { visibility: hidden; opacity: 0; transform: scale(.8); }
+.game-screen.is-solo .opponent-zone { justify-content: center; }
 
 .game-table {
   position: relative;

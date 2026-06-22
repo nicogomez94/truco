@@ -17,6 +17,7 @@ const joinModal = document.querySelector('#joinModal');
 const modalTitle = document.querySelector('#modalTitle');
 const modalEntry = document.querySelector('#modalEntry');
 const modalPrize = document.querySelector('#modalPrize');
+const modalSubtitle = document.querySelector('#modalSubtitle');
 const modalClose = document.querySelector('#modalClose');
 const confirmJoin = document.querySelector('#confirmJoin');
 const quickJoin = document.querySelector('#quickJoin');
@@ -24,6 +25,9 @@ const soundButton = document.querySelector('#soundButton');
 const loginSound = document.querySelector('#loginSound');
 const toast = document.querySelector('#toast');
 const gameTitle = document.querySelector('#gameTitle');
+const gameModeLine = document.querySelector('#gameModeLine');
+const teamUsLabel = document.querySelector('#teamUsLabel');
+const teamThemLabel = document.querySelector('#teamThemLabel');
 const gameEntry = document.querySelector('#gameEntry');
 const gamePlayerAvatar = document.querySelector('#gamePlayerAvatar');
 const gamePlayerName = document.querySelector('#gamePlayerName');
@@ -116,6 +120,7 @@ function openJoinModal(card) {
   modalTitle.textContent = card.dataset.name;
   modalEntry.textContent = formatMoney(entry);
   modalPrize.textContent = formatMoney(Math.round(entry * 3.6));
+  modalSubtitle.textContent = `Partida ${card.dataset.mode || '2 vs 2'} · Tu lugar queda reservado al confirmar.`;
   confirmJoin.disabled = entry > balance;
   confirmJoin.textContent = entry > balance ? 'Saldo insuficiente' : 'Confirmar y jugar';
   joinModal.hidden = false;
@@ -169,8 +174,15 @@ function startGameTransition(table) {
 }
 
 function enterGame(table) {
+  const mode = table.dataset.mode || '2 vs 2';
+  const points = table.dataset.points || '30';
+  const soloMode = mode === '1 vs 1';
   gameTitle.textContent = table.dataset.name;
   gameEntry.textContent = formatMoney(Number(table.dataset.entry));
+  gameModeLine.innerHTML = `<i class="fa-solid fa-circle"></i> Truco a ${points} · ${mode}`;
+  teamUsLabel.textContent = soloMode ? 'Vos' : 'Nosotros';
+  teamThemLabel.textContent = soloMode ? 'Rival' : 'Ellos';
+  gameScreen.classList.toggle('is-solo', soloMode);
   gamePlayerAvatar.textContent = playerAvatar.textContent;
   gamePlayerName.textContent = playerDisplay.textContent;
   loadingMessage.textContent = 'Barajando el mazo...';

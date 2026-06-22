@@ -77,7 +77,7 @@
       </button>
       <div class="game-room-copy">
         <span id="gameTitle">El Ombú</span>
-        <small><i class="fa-solid fa-circle"></i> Truco a 30 · 2 vs 2</small>
+        <small id="gameModeLine"><i class="fa-solid fa-circle"></i> Truco a 30 · 2 vs 2</small>
       </div>
       <div class="game-top-actions">
         <span class="game-entry" id="gameEntry">$ 250</span>
@@ -88,13 +88,13 @@
 
     <main class="game-board">
       <section class="scoreboard" aria-label="Marcador de la partida">
-        <div class="team-score team-score--us"><small>Nosotros</small><strong>0</strong></div>
+        <div class="team-score team-score--us"><small id="teamUsLabel">Nosotros</small><strong>0</strong></div>
         <div class="round-state">
           <span>Primera</span>
           <div class="round-dots" aria-label="Primera mano"><i class="is-current"></i><i></i><i></i></div>
           <small>A 30 tantos</small>
         </div>
-        <div class="team-score team-score--them"><small>Ellos</small><strong>0</strong></div>
+        <div class="team-score team-score--them"><small id="teamThemLabel">Ellos</small><strong>0</strong></div>
       </section>
 
       <section class="opponent-zone" aria-label="Rivales">
@@ -205,19 +205,19 @@
       </section>
 
       <section class="tables-grid fade-in" id="tablesGrid" aria-live="polite">
-        <article class="table-card" data-status="available" data-tier="low" data-name="El Ombú" data-entry="250" data-players="1">
+        <article class="table-card" data-status="available" data-tier="low" data-name="El Ombú" data-entry="250" data-players="1" data-mode="1 vs 1" data-points="30">
           <div class="table-topline"><span class="table-number">Mesa 01</span><span class="status-dot">1 lugar</span></div>
           <div class="table-visual table-visual--green" aria-hidden="true">
             <div class="table-felt"><span class="seat seat-top is-filled">CH</span><span class="seat seat-left is-filled">RC</span><span class="seat seat-right">+</span><span class="table-monogram">O</span></div>
           </div>
           <div class="table-info">
-            <div><h3>El Ombú</h3><p>Truco a 30 · 2 vs 2</p></div>
+            <div><h3>El Ombú</h3><p>Truco a 30 · 1 vs 1</p></div>
             <div class="entry"><small>Entrada</small><strong>$ 250</strong></div>
           </div>
           <button class="join-button" type="button">Sentarme <i class="fa-solid fa-arrow-right"></i></button>
         </article>
 
-        <article class="table-card table-card--featured" data-status="available" data-tier="low" data-name="La Pulpería" data-entry="750" data-players="2">
+        <article class="table-card table-card--featured" data-status="available" data-tier="low" data-name="La Pulpería" data-entry="750" data-players="2" data-mode="2 vs 2" data-points="30">
           <div class="popular-ribbon"><i class="fa-solid fa-fire"></i> La más jugada</div>
           <div class="table-topline"><span class="table-number">Mesa 07</span><span class="status-dot">2 lugares</span></div>
           <div class="table-visual table-visual--wine" aria-hidden="true">
@@ -230,19 +230,19 @@
           <button class="join-button" type="button">Sentarme <i class="fa-solid fa-arrow-right"></i></button>
         </article>
 
-        <article class="table-card" data-status="available" data-tier="high" data-name="Flor de Envido" data-entry="1500" data-players="1">
+        <article class="table-card" data-status="available" data-tier="high" data-name="Flor de Envido" data-entry="1500" data-players="1" data-mode="1 vs 1" data-points="15">
           <div class="table-topline"><span class="table-number">Mesa 12</span><span class="status-dot">1 lugar</span></div>
           <div class="table-visual table-visual--blue" aria-hidden="true">
             <div class="table-felt"><span class="seat seat-top is-filled">MM</span><span class="seat seat-left is-filled">DS</span><span class="seat seat-right">+</span><span class="table-monogram">F</span></div>
           </div>
           <div class="table-info">
-            <div><h3>Flor de Envido</h3><p>Truco a 15 · 2 vs 2</p></div>
+            <div><h3>Flor de Envido</h3><p>Truco a 15 · 1 vs 1</p></div>
             <div class="entry"><small>Entrada</small><strong>$ 1.500</strong></div>
           </div>
           <button class="join-button" type="button">Sentarme <i class="fa-solid fa-arrow-right"></i></button>
         </article>
 
-        <article class="table-card" data-status="full" data-tier="high" data-name="El Ancho Bravo" data-entry="3000" data-players="0">
+        <article class="table-card" data-status="full" data-tier="high" data-name="El Ancho Bravo" data-entry="3000" data-players="0" data-mode="2 vs 2" data-points="30">
           <div class="table-topline"><span class="table-number">Mesa 18</span><span class="status-dot is-full">Completa</span></div>
           <div class="table-visual table-visual--black" aria-hidden="true">
             <div class="table-felt"><span class="seat seat-top is-filled">CR</span><span class="seat seat-left is-filled">JP</span><span class="seat seat-right is-filled">LU</span><span class="table-monogram">A</span></div>
@@ -254,7 +254,7 @@
           <button class="join-button" type="button" disabled>En partida <i class="fa-solid fa-lock"></i></button>
         </article>
 
-        <article class="table-card" data-status="available" data-tier="high" data-name="La Herradura" data-entry="5000" data-players="2">
+        <article class="table-card" data-status="available" data-tier="high" data-name="La Herradura" data-entry="5000" data-players="2" data-mode="2 vs 2" data-points="30">
           <div class="table-topline"><span class="table-number">Mesa 22</span><span class="status-dot">2 lugares</span></div>
           <div class="table-visual table-visual--violet" aria-hidden="true">
             <div class="table-felt"><span class="seat seat-top is-filled">VG</span><span class="seat seat-left">+</span><span class="seat seat-right">+</span><span class="table-monogram">H</span></div>
@@ -266,7 +266,7 @@
           <button class="join-button" type="button">Sentarme <i class="fa-solid fa-arrow-right"></i></button>
         </article>
 
-        <article class="table-card table-card--gold" data-status="available" data-tier="high" data-name="Salón Dorado" data-entry="10000" data-players="1">
+        <article class="table-card table-card--gold" data-status="available" data-tier="high" data-name="Salón Dorado" data-entry="10000" data-players="1" data-mode="2 vs 2" data-points="30">
           <div class="table-topline"><span class="table-number">Mesa 33</span><span class="status-dot">1 lugar</span></div>
           <div class="table-visual table-visual--gold" aria-hidden="true">
             <div class="table-felt"><span class="seat seat-top is-filled">RG</span><span class="seat seat-left is-filled">NV</span><span class="seat seat-right">+</span><span class="table-monogram">33</span></div>
@@ -301,7 +301,7 @@
       <div class="modal-card-fan" aria-hidden="true"><span>1</span><span>7</span><span>3</span></div>
       <p class="eyebrow">Estás por sentarte en</p>
       <h2 id="modalTitle">El Ombú</h2>
-      <p class="modal-subtitle">Tu lugar queda reservado apenas confirmes.</p>
+      <p class="modal-subtitle" id="modalSubtitle">Tu lugar queda reservado apenas confirmes.</p>
       <div class="modal-details">
         <span><small>Entrada</small><strong id="modalEntry">$ 250</strong></span>
         <i class="fa-solid fa-arrow-right-long"></i>
