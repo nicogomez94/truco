@@ -1,5 +1,8 @@
 const loginScreen = document.querySelector('#loginScreen');
 const lobbyScreen = document.querySelector('#lobbyScreen');
+const gameScreen = document.querySelector('#gameScreen');
+const gameLoading = document.querySelector('#gameLoading');
+const loadingMessage = document.querySelector('#loadingMessage');
 const loginForm = document.querySelector('#loginForm');
 const guestButton = document.querySelector('#guestButton');
 const playerNameInput = document.querySelector('#playerName');
@@ -19,10 +22,23 @@ const confirmJoin = document.querySelector('#confirmJoin');
 const quickJoin = document.querySelector('#quickJoin');
 const soundButton = document.querySelector('#soundButton');
 const toast = document.querySelector('#toast');
+const gameTitle = document.querySelector('#gameTitle');
+const gameEntry = document.querySelector('#gameEntry');
+const gamePlayerAvatar = document.querySelector('#gamePlayerAvatar');
+const gamePlayerName = document.querySelector('#gamePlayerName');
+const turnMessage = document.querySelector('#turnMessage');
+const cardHint = document.querySelector('#cardHint');
+const leaveGame = document.querySelector('#leaveGame');
+const gameSound = document.querySelector('#gameSound');
+const gameSettings = document.querySelector('#gameSettings');
+const chatButton = document.querySelector('#chatButton');
+const playCards = [...document.querySelectorAll('.play-card')];
+const gameActions = [...document.querySelectorAll('.game-action')];
 
 let selectedTable = null;
 let balance = 12500;
 let toastTimeout;
+let gameReactionTimeout;
 
 const formatMoney = value => `$ ${new Intl.NumberFormat('es-AR').format(value)}`;
 
@@ -37,7 +53,7 @@ function showLobby(name) {
   loginScreen.classList.remove('is-active');
   lobbyScreen.classList.add('is-active');
   document.body.classList.add('lobby-active');
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  window.scrollTo({ top: 0, behavior: 'auto' });
   requestAnimationFrame(() => revealVisibleElements(lobbyScreen));
 }
 
@@ -133,7 +149,105 @@ confirmJoin.addEventListener('click', () => {
   button.disabled = true;
   selectedTable.classList.add('table-card--featured');
   closeJoinModal();
-  showToast(`¡Te sumaste a ${selectedTable.dataset.name}!`);
+  startGameTransition(selectedTable);
+});
+
+function startGameTransition(table) {
+  const messages = ['Barajando el mazo...', 'Repartiendo las cartas...', 'Preparando tu lugar...'];
+  gameLoading.hidden = false;
+  document.body.style.overflow = 'hidden';
+  loadingMessage.textContent = messages[0];
+
+  setTimeout(() => { loadingMessage.textContent = messages[1]; }, 430);
+  setTimeout(() => { loadingMessage.textContent = messages[2]; }, 900);
+  setTimeout(() => enterGame(table), 1400);
+}
+
+function enterGame(table) {
+  gameTitle.textContent = table.dataset.name;
+  gameEntry.textContent = formatMoney(Number(table.dataset.entry));
+  gamePlayerAvatar.textContent = playerAvatar.textContent;
+  gamePlayerName.textContent = playerDisplay.textContent;
+  loadingMessage.textContent = 'Barajando el mazo...';
+  gameLoading.hidden = true;
+  lobbyScreen.classList.remove('is-active');
+  gameScreen.classList.add('is-active');
+  document.body.classList.remove('lobby-active');
+  document.body.classList.add('game-active');
+  document.body.style.overflow = 'hidden';
+  resetGameInterface();
+}
+
+function resetGameInterface() {
+  clearTimeout(gameReactionTimeout);
+  turnMessage.innerHTML = '<span></span> Es tu turno de jugar';
+  turnMessage.classList.remove('is-reacting');
+  cardHint.textContent = 'Elegí una carta o cantá tu jugada';
+  playCards.forEach(card => {
+    card.classList.remove('is-selected');
+    card.setAttribute('aria-pressed', 'false');
+  });
+  gameActions.forEach(action => action.classList.remove('is-called'));
+}
+
+leaveGame.addEventListener('click', () => {
+  gameScreen.classList.remove('is-active');
+  lobbyScreen.classList.add('is-active');
+  document.body.classList.remove('game-active');
+  document.body.classList.add('lobby-active');
+  document.body.style.overflow = '';
+  window.scrollTo({ top: 0, behavior: 'auto' });
+  showToast('Volviste al salón principal.');
+});
+
+playCards.forEach(card => {
+  card.addEventListener('click', () => {
+    const wasSelected = card.classList.contains('is-selected');
+    playCards.forEach(item => {
+      item.classList.remove('is-selected');
+      item.setAttribute('aria-pressed', 'false');
+    });
+    if (!wasSelected) {
+      card.classList.add('is-selected');
+      card.setAttribute('aria-pressed', 'true');
+      cardHint.textContent = `${card.dataset.card} seleccionada`;
+    } else {
+      cardHint.textContent = 'Elegí una carta o cantá tu jugada';
+    }
+  });
+});
+
+gameActions.forEach(action => {
+  action.addEventListener('click', () => {
+    clearTimeout(gameReactionTimeout);
+    gameActions.forEach(item => item.classList.remove('is-called'));
+    action.classList.add('is-called');
+    turnMessage.innerHTML = `<span></span> ${action.dataset.call}`;
+    turnMessage.classList.add('is-reacting');
+    cardHint.textContent = action.classList.contains('game-action--fold') ? 'La mano queda en pausa' : 'Esperando la respuesta del rival';
+
+    gameReactionTimeout = setTimeout(() => {
+      turnMessage.innerHTML = '<span></span> El rival está pensando...';
+      turnMessage.classList.remove('is-reacting');
+      action.classList.remove('is-called');
+    }, 1150);
+  });
+});
+
+chatButton.addEventListener('click', () => {
+  const phrases = ['¡Quiero!', 'Buena mano', 'Dale, jugá', 'Flor de carta'];
+  const phrase = phrases[Math.floor(Math.random() * phrases.length)];
+  turnMessage.innerHTML = `<span></span> ${phrase}`;
+  turnMessage.classList.add('is-reacting');
+  setTimeout(() => turnMessage.classList.remove('is-reacting'), 650);
+});
+
+gameSettings.addEventListener('click', () => showToast('Ajustes de mesa: interfaz de muestra.'));
+
+gameSound.addEventListener('click', () => {
+  const muted = gameSound.classList.toggle('is-muted');
+  gameSound.innerHTML = `<i class="fa-solid fa-volume-${muted ? 'xmark' : 'high'}"></i>`;
+  showToast(muted ? 'Sonido de la mesa desactivado' : 'Sonido de la mesa activado');
 });
 
 quickJoin.addEventListener('click', () => {

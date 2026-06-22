@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="La Revancha, un prototipo de truco argentino online con mesas para todos los niveles.">
   <meta property="og:title" content="La Revancha — Truco online">
-  <meta name="theme-color" content="#071d1b">
+  <meta name="theme-color" content="#21080f">
   <title>La Revancha — Truco online</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -65,6 +65,98 @@
         <a href="https://zigodev.com.ar" target="_blank" rel="noopener noreferrer">Hecho por zigodev</a>
       </div>
     </main>
+  </section>
+
+  <section class="game-screen screen" id="gameScreen" aria-labelledby="gameTitle">
+    <header class="game-topbar">
+      <button class="game-icon-button" id="leaveGame" type="button" aria-label="Volver al lobby">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <div class="game-room-copy">
+        <span id="gameTitle">El Ombú</span>
+        <small><i class="fa-solid fa-circle"></i> Truco a 30 · 2 vs 2</small>
+      </div>
+      <div class="game-top-actions">
+        <span class="game-entry" id="gameEntry">$ 250</span>
+        <button class="game-icon-button" id="gameSound" type="button" aria-label="Sonido de la partida"><i class="fa-solid fa-volume-high"></i></button>
+        <button class="game-icon-button" id="gameSettings" type="button" aria-label="Ajustes de la partida"><i class="fa-solid fa-gear"></i></button>
+      </div>
+    </header>
+
+    <main class="game-board">
+      <section class="scoreboard" aria-label="Marcador de la partida">
+        <div class="team-score team-score--us"><small>Nosotros</small><strong>0</strong></div>
+        <div class="round-state">
+          <span>Primera</span>
+          <div class="round-dots" aria-label="Primera mano"><i class="is-current"></i><i></i><i></i></div>
+          <small>A 30 tantos</small>
+        </div>
+        <div class="team-score team-score--them"><small>Ellos</small><strong>0</strong></div>
+      </section>
+
+      <section class="opponent-zone" aria-label="Rivales">
+        <div class="side-player side-player--left"><span>CA</span><small>Cata</small></div>
+        <div class="opponent-main">
+          <div class="opponent-hand" aria-label="Tres cartas del rival boca abajo">
+            <div class="card-back"></div><div class="card-back"></div><div class="card-back"></div>
+          </div>
+          <div class="opponent-profile">
+            <span class="opponent-avatar">AJ</span>
+            <div><strong>As de Junín</strong><small><i></i> Pensando...</small></div>
+          </div>
+        </div>
+        <div class="side-player side-player--right"><span>FM</span><small>Fede</small></div>
+      </section>
+
+      <section class="game-table" aria-label="Mesa de juego">
+        <div class="table-stitch" aria-hidden="true"></div>
+        <div class="played-area">
+          <article class="spanish-card spanish-card--played" aria-label="Seis de bastos jugado">
+            <span class="card-corner"><b>6</b><i class="fa-solid fa-wand-sparkles"></i></span>
+            <i class="card-symbol fa-solid fa-wand-sparkles"></i>
+            <span class="card-suit-name">Bastos</span>
+          </article>
+          <div class="played-shadow" aria-hidden="true"></div>
+        </div>
+        <div class="turn-message" id="turnMessage"><span></span> Es tu turno de jugar</div>
+        <button class="chat-button" id="chatButton" type="button" aria-label="Abrir frases rápidas"><i class="fa-solid fa-comment-dots"></i></button>
+      </section>
+
+      <section class="player-zone" aria-label="Tu mano">
+        <div class="player-game-profile">
+          <span id="gamePlayerAvatar">I3</span>
+          <small id="gamePlayerName">Invitado 33</small>
+        </div>
+        <div class="player-hand" role="group" aria-label="Tus cartas">
+          <button class="spanish-card play-card play-card--one" type="button" data-card="1 de espada" aria-pressed="false">
+            <span class="card-corner"><b>1</b><i class="fa-solid fa-khanda"></i></span>
+            <i class="card-symbol fa-solid fa-khanda"></i>
+            <span class="card-suit-name">Espada</span>
+          </button>
+          <button class="spanish-card play-card play-card--two" type="button" data-card="7 de oro" aria-pressed="false">
+            <span class="card-corner"><b>7</b><i class="fa-solid fa-sun"></i></span>
+            <i class="card-symbol fa-solid fa-sun"></i>
+            <span class="card-suit-name">Oro</span>
+          </button>
+          <button class="spanish-card play-card play-card--three" type="button" data-card="3 de copa" aria-pressed="false">
+            <span class="card-corner"><b>3</b><i class="fa-solid fa-trophy"></i></span>
+            <i class="card-symbol fa-solid fa-trophy"></i>
+            <span class="card-suit-name">Copa</span>
+          </button>
+        </div>
+        <p class="card-hint" id="cardHint">Elegí una carta o cantá tu jugada</p>
+      </section>
+    </main>
+
+    <div class="game-actions" role="group" aria-label="Acciones disponibles">
+      <button class="game-action" type="button" data-call="¡Envido!">Envido</button>
+      <button class="game-action" type="button" data-call="¡Real envido!">Real <span>envido</span></button>
+      <button class="game-action" type="button" data-call="¡Falta envido!">Falta <span>envido</span></button>
+      <button class="game-action game-action--truco" type="button" data-call="¡Truco!">Truco</button>
+      <button class="game-action game-action--fold" type="button" data-call="Te fuiste al mazo">Mazo</button>
+    </div>
+
+    <a class="game-credit" href="https://zigodev.com.ar" target="_blank" rel="noopener noreferrer">Hecho por zigodev</a>
   </section>
 
   <section class="lobby-screen screen" id="lobbyScreen" aria-labelledby="lobbyTitle">
@@ -215,6 +307,13 @@
       <button class="primary-button" id="confirmJoin" type="button">Confirmar y jugar</button>
       <p class="responsible-note"><i class="fa-solid fa-circle-info"></i> Esto es una simulación: no se usa dinero real.</p>
     </div>
+  </div>
+
+  <div class="game-loading" id="gameLoading" role="status" aria-live="polite" hidden>
+    <div class="loading-deck" aria-hidden="true"><span></span><span></span><span></span></div>
+    <p class="eyebrow">La Revancha</p>
+    <h2 id="loadingMessage">Barajando el mazo...</h2>
+    <div class="loading-dots" aria-hidden="true"><i></i><i></i><i></i></div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"><i class="fa-solid fa-check"></i><span>¡Ya estás en la mesa!</span></div>
