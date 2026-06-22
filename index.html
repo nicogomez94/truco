@@ -286,10 +286,10 @@
   </section>
 
   <nav class="bottom-nav" aria-label="Navegación principal">
-    <button class="is-active" type="button"><i class="fa-solid fa-layer-group"></i><span>Mesas</span></button>
-    <button type="button"><i class="fa-solid fa-ranking-star"></i><span>Ranking</span></button>
-    <button type="button"><i class="fa-solid fa-trophy"></i><span>Torneos</span></button>
-    <button type="button"><i class="fa-solid fa-user"></i><span>Perfil</span></button>
+    <button class="is-active" type="button" data-panel="tables"><i class="fa-solid fa-layer-group"></i><span>Mesas</span></button>
+    <button type="button" data-panel="ranking" aria-controls="rankingModal"><i class="fa-solid fa-ranking-star"></i><span>Ranking</span></button>
+    <button type="button" data-panel="tournaments" aria-controls="tournamentsModal"><i class="fa-solid fa-trophy"></i><span>Torneos</span></button>
+    <button type="button" data-panel="profile" aria-controls="profileModal"><i class="fa-solid fa-user"></i><span>Perfil</span></button>
   </nav>
 
   <div class="modal-backdrop" id="joinModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
@@ -307,6 +307,97 @@
       <button class="primary-button" id="confirmJoin" type="button">Confirmar y jugar</button>
       <p class="responsible-note"><i class="fa-solid fa-circle-info"></i> Esto es una simulación: no se usa dinero real.</p>
     </div>
+  </div>
+
+  <div class="fantasy-overlay" id="rankingModal" role="dialog" aria-modal="true" aria-labelledby="rankingTitle" hidden>
+    <section class="fantasy-modal ranking-modal">
+      <button class="fantasy-close" type="button" aria-label="Cerrar ranking"><i class="fa-solid fa-xmark"></i></button>
+      <span class="modal-spark modal-spark--one" aria-hidden="true">✦</span><span class="modal-spark modal-spark--two" aria-hidden="true">✦</span>
+      <header class="fantasy-header">
+        <div class="fantasy-emblem"><i class="fa-solid fa-ranking-star"></i></div>
+        <p class="eyebrow">Liga federal · Temporada 04</p>
+        <h2 id="rankingTitle">Salón de <em>campeones</em></h2>
+        <p>Los que cantan fuerte, juegan fino y nunca miran para otro lado.</p>
+      </header>
+
+      <div class="ranking-podium" aria-label="Podio semanal">
+        <article class="podium-player podium-player--second">
+          <span class="podium-rank">2</span><div class="podium-avatar">LM</div><strong>La Mentirosa</strong><small>8.930 pts</small><div class="podium-base">II</div>
+        </article>
+        <article class="podium-player podium-player--first">
+          <i class="fa-solid fa-crown podium-crown"></i><span class="podium-rank">1</span><div class="podium-avatar">AN</div><strong>Ancho Negro</strong><small>10.420 pts</small><div class="podium-base">I</div>
+        </article>
+        <article class="podium-player podium-player--third">
+          <span class="podium-rank">3</span><div class="podium-avatar">FL</div><strong>Flor del Sur</strong><small>8.110 pts</small><div class="podium-base">III</div>
+        </article>
+      </div>
+
+      <div class="ranking-list">
+        <div class="ranking-row"><span>4</span><div class="mini-avatar">MP</div><strong>Mate Amargo</strong><small>7.870</small><i class="fa-solid fa-arrow-trend-up"></i></div>
+        <div class="ranking-row"><span>5</span><div class="mini-avatar">CL</div><strong>El Culebrón</strong><small>7.540</small><i class="fa-solid fa-minus"></i></div>
+        <div class="ranking-row ranking-row--me"><span>28</span><div class="mini-avatar" id="rankingPlayerAvatar">I3</div><strong id="rankingPlayerName">Invitado 33 <b>Vos</b></strong><small>3.210</small><i class="fa-solid fa-arrow-trend-up"></i></div>
+      </div>
+      <footer class="fantasy-footer"><span><i class="fa-solid fa-clock"></i> Actualiza en 4 días</span><a href="https://zigodev.com.ar" target="_blank" rel="noopener noreferrer">Hecho por zigodev</a></footer>
+    </section>
+  </div>
+
+  <div class="fantasy-overlay" id="tournamentsModal" role="dialog" aria-modal="true" aria-labelledby="tournamentsTitle" hidden>
+    <section class="fantasy-modal tournaments-modal">
+      <button class="fantasy-close" type="button" aria-label="Cerrar torneos"><i class="fa-solid fa-xmark"></i></button>
+      <span class="modal-spark modal-spark--one" aria-hidden="true">✦</span><span class="modal-spark modal-spark--two" aria-hidden="true">✦</span>
+      <header class="fantasy-header">
+        <div class="fantasy-emblem fantasy-emblem--trophy"><i class="fa-solid fa-trophy"></i></div>
+        <p class="eyebrow">Cartelera de desafíos</p>
+        <h2 id="tournamentsTitle">Noches de <em>revancha</em></h2>
+        <p>Premios de fantasía, gloria bastante real.</p>
+      </header>
+
+      <article class="featured-tournament">
+        <div class="tournament-ribbon"><i class="fa-solid fa-fire"></i> Evento principal</div>
+        <div class="tournament-copy"><small>Viernes · 21:00</small><h3>La Copa del Farol</h3><p>16 parejas · Eliminación directa · Truco a 30</p></div>
+        <div class="tournament-prize"><small>Pozo total</small><strong>$ 50.000</strong></div>
+        <div class="countdown" aria-label="Faltan dos días, cuatro horas y doce minutos"><span><b>02</b>días</span><span><b>04</b>horas</span><span><b>12</b>min</span></div>
+        <button class="fantasy-cta prototype-action" type="button" data-message="¡Preinscripción guardada para La Copa del Farol!">Quiero mi lugar <i class="fa-solid fa-arrow-right"></i></button>
+      </article>
+
+      <div class="tournament-list">
+        <article><span class="tournament-icon"><i class="fa-solid fa-bolt"></i></span><div><small>Hoy · 23:30</small><strong>Relámpago Criollo</strong><p>Entrada $500 · 8 lugares</p></div><button class="prototype-action" type="button" data-message="Te avisaremos cuando abra Relámpago Criollo.">Avisarme</button></article>
+        <article><span class="tournament-icon"><i class="fa-solid fa-moon"></i></span><div><small>Domingo · 20:00</small><strong>Duelo de Medianoche</strong><p>Entrada $1.500 · Parejas</p></div><button class="prototype-action" type="button" data-message="Te avisaremos cuando abra Duelo de Medianoche.">Avisarme</button></article>
+      </div>
+      <footer class="fantasy-footer"><span><i class="fa-solid fa-shield-halved"></i> Premios simulados</span><a href="https://zigodev.com.ar" target="_blank" rel="noopener noreferrer">Hecho por zigodev</a></footer>
+    </section>
+  </div>
+
+  <div class="fantasy-overlay" id="profileModal" role="dialog" aria-modal="true" aria-labelledby="profileTitle" hidden>
+    <section class="fantasy-modal profile-modal">
+      <button class="fantasy-close" type="button" aria-label="Cerrar perfil"><i class="fa-solid fa-xmark"></i></button>
+      <span class="modal-spark modal-spark--one" aria-hidden="true">✦</span><span class="modal-spark modal-spark--two" aria-hidden="true">✦</span>
+      <header class="profile-hero">
+        <div class="profile-seal"><span id="profileAvatar">I3</span><i class="fa-solid fa-star"></i></div>
+        <div><p class="eyebrow">Tahúr nivel 12</p><h2 id="profileTitle"><span id="profileName">Invitado 33</span></h2><p>Socio desde esta misma tarde.</p></div>
+      </header>
+
+      <div class="level-progress"><div><span>Nivel 12</span><small>740 / 1.000 XP</small></div><div class="progress-track"><i></i></div></div>
+
+      <div class="profile-stats">
+        <article><i class="fa-solid fa-trophy"></i><strong>68%</strong><small>Victorias</small></article>
+        <article><i class="fa-solid fa-hand-fist"></i><strong>124</strong><small>Trucos</small></article>
+        <article><i class="fa-solid fa-clover"></i><strong>17</strong><small>Flores</small></article>
+      </div>
+
+      <section class="badge-cabinet">
+        <div class="cabinet-title"><span>Vitrina de hazañas</span><small>4 de 12</small></div>
+        <div class="badges-grid">
+          <button type="button" title="Primer truco"><i class="fa-solid fa-hat-wizard"></i><span>Primer grito</span></button>
+          <button type="button" title="Diez victorias"><i class="fa-solid fa-medal"></i><span>Invicto</span></button>
+          <button type="button" title="Ganó con flor"><i class="fa-solid fa-seedling"></i><span>Con flor</span></button>
+          <button type="button" title="Insignia secreta" disabled><i class="fa-solid fa-lock"></i><span>Secreta</span></button>
+        </div>
+      </section>
+
+      <button class="profile-edit prototype-action" type="button" data-message="Edición de perfil: disponible en la versión completa."><i class="fa-solid fa-pen-nib"></i> Editar mi estampa</button>
+      <footer class="fantasy-footer"><span><i class="fa-solid fa-shield"></i> Perfil verificado</span><a href="https://zigodev.com.ar" target="_blank" rel="noopener noreferrer">Hecho por zigodev</a></footer>
+    </section>
   </div>
 
   <div class="game-loading" id="gameLoading" role="status" aria-live="polite" hidden>

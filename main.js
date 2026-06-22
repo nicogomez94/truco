@@ -34,6 +34,8 @@ const gameSettings = document.querySelector('#gameSettings');
 const chatButton = document.querySelector('#chatButton');
 const playCards = [...document.querySelectorAll('.play-card')];
 const gameActions = [...document.querySelectorAll('.game-action')];
+const fantasyModals = [...document.querySelectorAll('.fantasy-overlay')];
+const menuButtons = [...document.querySelectorAll('.bottom-nav button')];
 
 let selectedTable = null;
 let balance = 12500;
@@ -135,6 +137,7 @@ joinModal.addEventListener('click', event => {
 });
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && !joinModal.hidden) closeJoinModal();
+  if (event.key === 'Escape') closeFantasyModals();
 });
 
 confirmJoin.addEventListener('click', () => {
@@ -275,12 +278,63 @@ soundButton.addEventListener('click', () => {
   showToast(muted ? 'Sonidos desactivados' : 'Sonidos activados');
 });
 
-document.querySelector('#tournamentButton').addEventListener('click', () => showToast('El torneo abre el viernes a las 21:00.'));
+function syncFantasyProfile() {
+  const name = playerDisplay.textContent;
+  const avatar = playerAvatar.textContent;
+  document.querySelector('#profileName').textContent = name;
+  document.querySelector('#profileAvatar').textContent = avatar;
+  document.querySelector('#rankingPlayerName').innerHTML = `${name} <b>Vos</b>`;
+  document.querySelector('#rankingPlayerAvatar').textContent = avatar;
+}
 
-document.querySelectorAll('.bottom-nav button').forEach(button => {
+function openFantasyModal(panel) {
+  const modal = document.querySelector(`#${panel}Modal`);
+  if (!modal) return;
+  clearTimeout(toastTimeout);
+  toast.classList.remove('is-visible');
+  fantasyModals.forEach(item => { item.hidden = true; });
+  syncFantasyProfile();
+  modal.hidden = false;
+  document.body.classList.add('fantasy-open');
+  setTimeout(() => modal.querySelector('.fantasy-close')?.focus(), 30);
+}
+
+function closeFantasyModals(restoreMenu = true) {
+  const hadOpenModal = fantasyModals.some(modal => !modal.hidden);
+  fantasyModals.forEach(modal => { modal.hidden = true; });
+  document.body.classList.remove('fantasy-open');
+  if (restoreMenu && hadOpenModal) {
+    menuButtons.forEach(button => button.classList.toggle('is-active', button.dataset.panel === 'tables'));
+    document.querySelector('[data-panel="tables"]')?.focus();
+  }
+}
+
+fantasyModals.forEach(modal => {
+  modal.querySelector('.fantasy-close').addEventListener('click', () => closeFantasyModals());
+  modal.addEventListener('click', event => {
+    if (event.target === modal) closeFantasyModals();
+  });
+});
+
+document.querySelectorAll('.prototype-action').forEach(button => {
+  button.addEventListener('click', () => showToast(button.dataset.message));
+});
+
+document.querySelector('#tournamentButton').addEventListener('click', () => {
+  menuButtons.forEach(button => button.classList.toggle('is-active', button.dataset.panel === 'tournaments'));
+  openFantasyModal('tournaments');
+});
+
+menuButtons.forEach(button => {
   button.addEventListener('click', () => {
-    document.querySelectorAll('.bottom-nav button').forEach(item => item.classList.toggle('is-active', item === button));
-    if (!button.matches(':first-child')) showToast(`${button.textContent.trim()}: sección de muestra`);
+    menuButtons.forEach(item => item.classList.toggle('is-active', item === button));
+    const panel = button.dataset.panel;
+    if (panel === 'tables') {
+      closeFantasyModals(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    openFantasyModal(panel);
   });
 });
 
