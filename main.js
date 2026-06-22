@@ -36,6 +36,7 @@ function showLobby(name) {
   playerAvatar.textContent = initials(safeName);
   loginScreen.classList.remove('is-active');
   lobbyScreen.classList.add('is-active');
+  document.body.classList.add('lobby-active');
   window.scrollTo({ top: 0, behavior: 'instant' });
   requestAnimationFrame(() => revealVisibleElements(lobbyScreen));
 }
