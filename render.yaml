@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: la-revancha-truco
+    runtime: static
+    staticPublishPath: .
+    pullRequestPreviewsEnabled: false
+    buildCommand: ""
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: "public, max-age=3600"
+      - path: /*.css
+        name: Cache-Control
+        value: "public, max-age=86400"
+      - path: /*.js
+        name: Cache-Control
+        value: "public, max-age=86400"
