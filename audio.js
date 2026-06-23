@@ -212,9 +212,9 @@
     else if (target.matches('.game-action--fold')) play('fold');
     else if (target.matches('.game-action')) play('call');
     else if (target.matches('#confirmJoin')) play('shuffle');
-    else if (target.matches('.fantasy-close, #modalClose, #leaveGame')) play('close');
-    else if (target.matches('[data-panel]:not([data-panel="tables"]), #tournamentButton')) play('open');
-    else if (target.matches('.prototype-action, .join-button')) play('coin');
+    else if (target.matches('.fantasy-close, #modalClose, #tableBuilderClose, #leaveGame')) play('close');
+    else if (target.matches('[data-panel]:not([data-panel="tables"]), #tournamentButton, #openTableBuilder')) play('open');
+    else if (target.matches('.prototype-action, .join-button, .request-join')) play('coin');
     else play('click');
   });
 

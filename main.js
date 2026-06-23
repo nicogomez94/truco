@@ -12,11 +12,13 @@ const passwordInput = document.querySelector('#password');
 const passwordToggle = document.querySelector('#passwordToggle');
 const balanceDisplay = document.querySelector('#balanceDisplay');
 const filterButtons = document.querySelectorAll('.filter-button');
-const tableCards = [...document.querySelectorAll('.table-card')];
+let tableCards = [...document.querySelectorAll('.table-card')];
+const tablesGrid = document.querySelector('#tablesGrid');
 const joinModal = document.querySelector('#joinModal');
 const modalTitle = document.querySelector('#modalTitle');
 const modalEntry = document.querySelector('#modalEntry');
 const modalPrize = document.querySelector('#modalPrize');
+const modalCommission = document.querySelector('#modalCommission');
 const modalSubtitle = document.querySelector('#modalSubtitle');
 const modalClose = document.querySelector('#modalClose');
 const confirmJoin = document.querySelector('#confirmJoin');
@@ -41,6 +43,14 @@ const playCards = [...document.querySelectorAll('.play-card')];
 const gameActions = [...document.querySelectorAll('.game-action')];
 const fantasyModals = [...document.querySelectorAll('.fantasy-overlay')];
 const menuButtons = [...document.querySelectorAll('.bottom-nav button')];
+const openTableBuilder = document.querySelector('#openTableBuilder');
+const tableBuilderModal = document.querySelector('#tableBuilderModal');
+const tableBuilderClose = document.querySelector('#tableBuilderClose');
+const tableBuilderForm = document.querySelector('#tableBuilderForm');
+const customTableEntry = document.querySelector('#customTableEntry');
+const builderGross = document.querySelector('#builderGross');
+const builderCommission = document.querySelector('#builderCommission');
+const builderNet = document.querySelector('#builderNet');
 
 let selectedTable = null;
 let balance = 12500;
@@ -48,6 +58,18 @@ let toastTimeout;
 let gameReactionTimeout;
 
 const formatMoney = value => `$ ${new Intl.NumberFormat('es-AR').format(value)}`;
+const COMMISSION_RATE = 0.08;
+
+function getTableEconomy(entry, mode) {
+  const players = mode === '1 vs 1' ? 2 : 4;
+  const gross = entry * players;
+  const commission = Math.round(gross * COMMISSION_RATE);
+  return { gross, commission, net: gross - commission };
+}
+
+function escapeHTML(value) {
+  return value.replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
+}
 
 function initials(name) {
   return name.trim().split(/\s+/).slice(0, 2).map(word => word[0]).join('').toUpperCase() || 'TI';
@@ -117,10 +139,13 @@ filterButtons.forEach(button => {
 function openJoinModal(card) {
   selectedTable = card;
   const entry = Number(card.dataset.entry);
+  const mode = card.dataset.mode || '2 vs 2';
+  const economy = getTableEconomy(entry, mode);
   modalTitle.textContent = card.dataset.name;
   modalEntry.textContent = formatMoney(entry);
-  modalPrize.textContent = formatMoney(Math.round(entry * 3.6));
-  modalSubtitle.textContent = `Partida ${card.dataset.mode || '2 vs 2'} · Tu lugar queda reservado al confirmar.`;
+  modalCommission.textContent = formatMoney(economy.commission);
+  modalPrize.textContent = formatMoney(economy.net);
+  modalSubtitle.textContent = `${mode} · A ${card.dataset.points || '30'} · ${card.dataset.flor || 'Sin flor'}`;
   confirmJoin.disabled = entry > balance;
   confirmJoin.textContent = entry > balance ? 'Saldo insuficiente' : 'Confirmar y jugar';
   joinModal.hidden = false;
@@ -131,11 +156,13 @@ function openJoinModal(card) {
 function closeJoinModal() {
   joinModal.hidden = true;
   document.body.style.overflow = '';
-  selectedTable?.querySelector('.join-button')?.focus();
+  selectedTable?.querySelector('.join-button, .request-join')?.focus();
 }
 
-document.querySelectorAll('.join-button:not(:disabled)').forEach(button => {
-  button.addEventListener('click', () => openJoinModal(button.closest('.table-card')));
+document.addEventListener('click', event => {
+  const button = event.target.closest('.join-button:not(:disabled), .request-join:not(:disabled)');
+  if (!button) return;
+  openJoinModal(button.closest('[data-name]'));
 });
 
 modalClose.addEventListener('click', closeJoinModal);
@@ -144,6 +171,7 @@ joinModal.addEventListener('click', event => {
 });
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && !joinModal.hidden) closeJoinModal();
+  if (event.key === 'Escape' && !tableBuilderModal.hidden) closeTableBuilder();
   if (event.key === 'Escape') closeFantasyModals();
 });
 
@@ -154,12 +182,87 @@ confirmJoin.addEventListener('click', () => {
 
   balance -= entry;
   balanceDisplay.textContent = formatMoney(balance);
-  const button = selectedTable.querySelector('.join-button');
-  button.innerHTML = '<i class="fa-solid fa-chair"></i> Ya estás sentado';
-  button.disabled = true;
+  const button = selectedTable.querySelector('.join-button, .request-join');
+  if (button) {
+    button.innerHTML = '<i class="fa-solid fa-chair"></i> Ya estás sentado';
+    button.disabled = true;
+  }
   selectedTable.classList.add('table-card--featured');
   closeJoinModal();
   startGameTransition(selectedTable);
+});
+
+function updateBuilderEconomy() {
+  const formData = new FormData(tableBuilderForm);
+  const entry = Math.min(10000, Math.max(100, Number(formData.get('entry')) || 0));
+  const economy = getTableEconomy(entry, formData.get('mode'));
+  builderGross.textContent = formatMoney(economy.gross);
+  builderCommission.textContent = formatMoney(economy.commission);
+  builderNet.textContent = formatMoney(economy.net);
+}
+
+function showTableBuilder() {
+  closeFantasyModals(false);
+  tableBuilderModal.hidden = false;
+  document.body.style.overflow = 'hidden';
+  updateBuilderEconomy();
+  setTimeout(() => document.querySelector('#customTableName').focus(), 30);
+}
+
+function closeTableBuilder() {
+  tableBuilderModal.hidden = true;
+  document.body.style.overflow = '';
+  openTableBuilder.focus();
+}
+
+openTableBuilder.addEventListener('click', showTableBuilder);
+tableBuilderClose.addEventListener('click', closeTableBuilder);
+tableBuilderModal.addEventListener('click', event => {
+  if (event.target === tableBuilderModal) closeTableBuilder();
+});
+tableBuilderForm.addEventListener('input', updateBuilderEconomy);
+tableBuilderForm.addEventListener('change', updateBuilderEconomy);
+
+tableBuilderForm.addEventListener('submit', event => {
+  event.preventDefault();
+  if (!tableBuilderForm.checkValidity()) {
+    tableBuilderForm.reportValidity();
+    return;
+  }
+
+  const formData = new FormData(tableBuilderForm);
+  const name = String(formData.get('tableName')).trim() || 'Mi Revancha';
+  const mode = String(formData.get('mode'));
+  const points = String(formData.get('points'));
+  const flor = String(formData.get('flor'));
+  const entry = Math.min(10000, Math.max(100, Number(formData.get('entry'))));
+  const safeName = escapeHTML(name);
+  const tableNumber = String(tableCards.length + 1).padStart(2, '0');
+  const spots = mode === '1 vs 1' ? '1 lugar' : '3 lugares';
+  const ownerInitials = escapeHTML(playerAvatar.textContent);
+
+  tablesGrid.insertAdjacentHTML('afterbegin', `
+    <article class="table-card table-card--custom" data-status="available" data-tier="${entry <= 1000 ? 'low' : 'high'}" data-name="${safeName}" data-entry="${entry}" data-players="1" data-mode="${mode}" data-points="${points}" data-flor="${flor}">
+      <div class="table-topline"><span class="table-number">Mesa ${tableNumber}</span><span class="status-dot">${spots}</span></div>
+      <div class="table-visual table-visual--wine" aria-hidden="true">
+        <div class="table-felt"><span class="seat seat-top is-filled">${ownerInitials}</span><span class="seat seat-left">+</span><span class="seat seat-right">+</span><span class="table-monogram">${escapeHTML(name.charAt(0).toUpperCase())}</span></div>
+      </div>
+      <div class="table-info">
+        <div><h3>${safeName}</h3><p>Truco a ${points} · ${mode} · ${flor}</p></div>
+        <div class="entry"><small>Apuesta</small><strong>${formatMoney(entry)}</strong></div>
+      </div>
+      <button class="join-button" type="button">Entrar a mi mesa <i class="fa-solid fa-arrow-right"></i></button>
+    </article>
+  `);
+
+  tableCards = [...document.querySelectorAll('.table-card')];
+  filterButtons.forEach(button => button.classList.toggle('is-active', button.dataset.filter === 'all'));
+  tableCards.forEach(card => card.classList.remove('is-hidden'));
+  const createdTable = tablesGrid.querySelector('.table-card--custom');
+  closeTableBuilder();
+  createdTable.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  window.trucoAudio?.play('success');
+  showToast(`Mesa “${name}” publicada. Ya está buscando jugadores.`);
 });
 
 function startGameTransition(table) {
@@ -176,10 +279,11 @@ function startGameTransition(table) {
 function enterGame(table) {
   const mode = table.dataset.mode || '2 vs 2';
   const points = table.dataset.points || '30';
+  const flor = table.dataset.flor || 'Sin flor';
   const soloMode = mode === '1 vs 1';
   gameTitle.textContent = table.dataset.name;
   gameEntry.textContent = formatMoney(Number(table.dataset.entry));
-  gameModeLine.innerHTML = `<i class="fa-solid fa-circle"></i> Truco a ${points} · ${mode}`;
+  gameModeLine.innerHTML = `<i class="fa-solid fa-circle"></i> Truco a ${points} · ${mode} · ${flor}`;
   teamUsLabel.textContent = soloMode ? 'Vos' : 'Nosotros';
   teamThemLabel.textContent = soloMode ? 'Rival' : 'Ellos';
   gameScreen.classList.toggle('is-solo', soloMode);

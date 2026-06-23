@@ -199,9 +199,35 @@
           <button class="filter-button" type="button" data-filter="available">Con lugar</button>
           <button class="filter-button" type="button" data-filter="low">Hasta $1.000</button>
         </div>
-        <button class="quick-button" id="quickJoin" type="button">
-          <i class="fa-solid fa-bolt"></i> Mesa rápida
-        </button>
+        <div class="lobby-action-buttons">
+          <button class="quick-button" id="quickJoin" type="button">
+            <i class="fa-solid fa-bolt"></i> Mesa rápida
+          </button>
+          <button class="create-table-button" id="openTableBuilder" type="button">
+            <i class="fa-solid fa-plus"></i> Armar mi mesa
+          </button>
+        </div>
+      </section>
+
+      <section class="table-requests fade-in" aria-labelledby="requestsTitle">
+        <header class="requests-header">
+          <div><span class="request-live-dot"></span><h2 id="requestsTitle">Pedidos en vivo</h2></div>
+          <small>Jugadores buscando mesa ahora</small>
+        </header>
+        <div class="requests-list" id="requestsList">
+          <article class="request-card" data-name="Duelo del Morocho" data-entry="500" data-mode="1 vs 1" data-points="15" data-flor="Sin flor">
+            <span class="request-avatar">M7</span>
+            <div class="request-copy"><strong>Morocho_77 busca rival</strong><p>1 vs 1 · A 15 · Sin flor</p></div>
+            <div class="request-bet"><small>Apuesta</small><b>$ 500</b></div>
+            <button class="request-join" type="button">Unirme</button>
+          </article>
+          <article class="request-card" data-name="Las Primas" data-entry="1200" data-mode="2 vs 2" data-points="30" data-flor="Con flor">
+            <span class="request-avatar">LP</span>
+            <div class="request-copy"><strong>Las Primas buscan pareja</strong><p>2 vs 2 · A 30 · Con flor</p></div>
+            <div class="request-bet"><small>Apuesta</small><b>$ 1.200</b></div>
+            <button class="request-join" type="button">Unirme</button>
+          </article>
+        </div>
       </section>
 
       <section class="tables-grid fade-in" id="tablesGrid" aria-live="polite">
@@ -305,11 +331,67 @@
       <div class="modal-details">
         <span><small>Entrada</small><strong id="modalEntry">$ 250</strong></span>
         <i class="fa-solid fa-arrow-right-long"></i>
-        <span><small>Premio estimado</small><strong id="modalPrize">$ 900</strong></span>
+        <span><small>Comisión 8%</small><strong id="modalCommission">$ 40</strong></span>
+        <i class="fa-solid fa-arrow-right-long"></i>
+        <span><small>Pozo neto</small><strong id="modalPrize">$ 460</strong></span>
       </div>
       <button class="primary-button" id="confirmJoin" type="button">Confirmar y jugar</button>
       <p class="responsible-note"><i class="fa-solid fa-circle-info"></i> Esto es una simulación: no se usa dinero real.</p>
     </div>
+  </div>
+
+  <div class="modal-backdrop table-builder-backdrop" id="tableBuilderModal" role="dialog" aria-modal="true" aria-labelledby="tableBuilderTitle" hidden>
+    <section class="table-builder-modal">
+      <button class="modal-close" id="tableBuilderClose" type="button" aria-label="Cerrar creador de mesa"><i class="fa-solid fa-xmark"></i></button>
+      <div class="builder-mark" aria-hidden="true"><i class="fa-solid fa-plus"></i></div>
+      <p class="eyebrow">Configuración rápida</p>
+      <h2 id="tableBuilderTitle">Armá tu mesa</h2>
+      <p class="builder-lead">Elegí las reglas y la apuesta. La mesa aparecerá inmediatamente en el lobby.</p>
+
+      <form id="tableBuilderForm">
+        <label class="builder-label" for="customTableName">Nombre de la mesa</label>
+        <input class="builder-name-input" id="customTableName" name="tableName" type="text" value="Mi Revancha" maxlength="22" required>
+
+        <fieldset class="builder-fieldset">
+          <legend>Modalidad</legend>
+          <div class="builder-options">
+            <label><input type="radio" name="mode" value="1 vs 1" checked><span>1 vs 1</span></label>
+            <label><input type="radio" name="mode" value="2 vs 2"><span>2 vs 2</span></label>
+          </div>
+        </fieldset>
+
+        <div class="builder-columns">
+          <fieldset class="builder-fieldset">
+            <legend>Puntos</legend>
+            <div class="builder-options">
+              <label><input type="radio" name="points" value="15" checked><span>A 15</span></label>
+              <label><input type="radio" name="points" value="30"><span>A 30</span></label>
+            </div>
+          </fieldset>
+          <fieldset class="builder-fieldset">
+            <legend>Flor</legend>
+            <div class="builder-options">
+              <label><input type="radio" name="flor" value="Con flor"><span>Con</span></label>
+              <label><input type="radio" name="flor" value="Sin flor" checked><span>Sin</span></label>
+            </div>
+          </fieldset>
+        </div>
+
+        <label class="builder-label" for="customTableEntry">Apuesta por jugador</label>
+        <div class="builder-money-input"><span>$</span><input id="customTableEntry" name="entry" type="number" min="100" max="10000" step="100" value="500" required></div>
+
+        <div class="commission-summary" aria-live="polite">
+          <div><small>Pozo bruto</small><strong id="builderGross">$ 1.000</strong></div>
+          <span class="commission-minus">−</span>
+          <div><small>Comisión 8%</small><strong id="builderCommission">$ 80</strong></div>
+          <span class="commission-equals">=</span>
+          <div class="net-prize"><small>Pozo neto</small><strong id="builderNet">$ 920</strong></div>
+        </div>
+
+        <button class="primary-button builder-submit" type="submit"><i class="fa-solid fa-wand-magic-sparkles"></i> Publicar mesa</button>
+        <p class="responsible-note"><i class="fa-solid fa-circle-info"></i> Valores simulados para este prototipo.</p>
+      </form>
+    </section>
   </div>
 
   <div class="fantasy-overlay" id="rankingModal" role="dialog" aria-modal="true" aria-labelledby="rankingTitle" hidden>
